@@ -1,3 +1,5 @@
+# this repo has been modified to work with octave! not everything has been updated
+
 At one point or another, the following Toolboxes were required. I would install all to be safe.
 1. Computer Vision Toolbox
 2. GPU Coder

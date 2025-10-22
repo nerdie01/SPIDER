@@ -55,11 +55,6 @@ ylim(xlim);
 zlim(ylim);
 pbaspect([1 1 1]);
 
-
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part 2: compute a library matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

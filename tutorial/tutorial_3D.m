@@ -12,6 +12,8 @@ Press ctrl + enter to run individual sections
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear;
 
+pkg load symbolic;
+
 % Simulate the Thomas attractor
 % https://en.wikipedia.org/wiki/Thomas%27_cyclically_symmetric_attractor
 

@@ -23,7 +23,7 @@ function k = report_identified_model(cs, residuals, scales, labels, gamma)
 
     I = find(cs(:,k));
     for i = 1:k
-      fprintf("%.5f " + labels{I(i)}, c(i));
+      fprintf(labels{I(i)}, c(i));
       if i == k
         continue;
       end 

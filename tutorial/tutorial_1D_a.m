@@ -12,6 +12,8 @@ Press ctrl + enter to run individual sections
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear;
 
+pkg load symbolic;
+
 % Simulate the Thomas attractor
 % https://en.wikipedia.org/wiki/Thomas%27_cyclically_symmetric_attractor
 b = 0.15;
@@ -46,10 +48,7 @@ ylim(xlim);
 zlim(ylim);
 pbaspect([1 1 1]);
 
-
-
-
-
+save data;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Part 2: compute a library matrix
