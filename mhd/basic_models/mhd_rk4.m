@@ -42,8 +42,8 @@ function [x,y,t,u,v,p,Bx,By] = mhd_rk4(n, dt, timesteps, nu, eta, lorentz, skip,
     kx = kx .* mask;
     ky = ky .* mask;
 
-    omega = fft2(omega);
-    A = fft2(A);
+    omega = fft2(omega) .* mask;
+    A = fft2(A) .* mask;
 
     for t = 1:timesteps
         u(:,:,t) = real(ifft2(to_u .* omega));
@@ -57,29 +57,34 @@ function [x,y,t,u,v,p,Bx,By] = mhd_rk4(n, dt, timesteps, nu, eta, lorentz, skip,
         vy = real(ifft2(1i*ky.*to_v.*omega));
         p(:,:,t) = real(ifft2( to_p.*fft2( ux.^2 + vy.^2 + 2*uy.*vx ) ));
 
+        f = @(x, y) mhd_terms(x, y, kx, ky, to_u, to_v, nu, eta, lorentz, mask);
+
         for i = 1:skip
-            [k1_omega, k1_A] = mhd_terms(omega, A, kx, ky, to_u, to_v, nu, eta, lorentz, mask);
+            [k1_omega, k1_A] = f(omega, A);
             k1_omega = dt * k1_omega;
             k1_A = dt * k1_A;
 
-            [k2_omega, k2_A] = mhd_terms(omega + k1_omega/2, A + k1_A/2, kx, ky, to_u, to_v, nu, eta, lorentz, mask);
+            disp(k1_omega(1,1))
+
+            [k2_omega, k2_A] = f(omega + k1_omega/2, A + k1_A/2);
             k2_omega = dt * k2_omega;
             k2_A = dt * k2_A;
 
-            [k3_omega, k3_A] = mhd_terms(omega + k2_omega/2, A + k2_A/2, kx, ky, to_u, to_v, nu, eta, lorentz, mask);
+            [k3_omega, k3_A] = f(omega + k2_omega/2, A + k2_A/2);
             k3_omega = dt * k3_omega;
             k3_A = dt * k3_A;
 
-            [k4_omega, k4_A] = mhd_terms(omega + k3_omega, A + k3_A, kx, ky, to_u, to_v, nu, eta, lorentz, mask);
+            [k4_omega, k4_A] = f(omega + k3_omega, A + k3_A);
             k4_omega = dt * k4_omega;
             k4_A = dt * k4_A;
 
-            omega = omega + (k1_omega + 2*k2_omega + 2*k3_omega + k4_omega)/6;
-            A = A + (k1_A + 2*k2_A + 2*k3_A + k4_A)/6;
+            omega = omega + k1_omega/6 + k2_omega/3 + k3_omega/3 + k4_omega/6; #(k1_omega + 2*k2_omega + 2*k3_omega + k4_omega)/6;
+            A = A + k1_A/6 + k2_A/3 + k3_A/3 + k4_A/6; #(k1_A + 2*k2_A + 2*k3_A + k4_A)/6;
         end
 
         if vis
-            visualize_fields(omega, A, "velocity", "B field")
+            visualize_fields(omega, A, "velocity", "B field");
+            disp([t, omega(1,1)]);
         end
     end
 
